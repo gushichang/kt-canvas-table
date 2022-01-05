@@ -1,0 +1,179 @@
+@import url(./iconfont/iconfont.css);
+.kt-canvas-table-box{
+  line-height: 0;
+  animation: toOpacity 0.1s;
+}
+@keyframes toOpacity {
+  from {
+    opacity: 0.98
+  } to {
+    opacity: 1
+  }
+}
+.kt-canvas-table{
+  position: relative;
+  display: inline-block;
+  * {
+    box-sizing: border-box;
+  }
+  &-operate-board{
+    line-height: 1.4;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    // display: flex;
+    // flex-wrap: wrap;
+  }
+  &-scrolly-box{
+    z-index: 10;
+    position: absolute;
+    right: 0;
+    top: var(--header-height);
+    height: 100%;
+    width: var(--bar-width);
+  }
+  &-scrolly-bar{
+    background: rgba(0,0,0,0.1);
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 4px);
+    position: absolute;
+    border-radius: 100px;
+    transition: background, width .15s;
+    cursor: pointer;
+  }
+  .moving.kt-canvas-table-scrolly-bar,
+  &-scrolly-bar:hover{
+    background: rgba(0,0,0,0.35);
+    width: calc(100% - 2px);
+  }
+  &-scrollx-box{
+    position: absolute;
+    background: var(--background);
+    height: var(--bar-width);
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    width: 100%;
+    bottom: 0;
+    z-index: 10;
+  }
+  &_border &-scrollx-box{
+    border: 1px solid var(--border-color);
+  }
+  &-scrollx-bar{
+    height: calc(100% - 2px);
+    background: rgba(0,0,0,0.1);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 100px;
+    transition: background, height .15s;
+    cursor: pointer;
+  }
+  .moving.kt-canvas-table-scrollx-bar,
+  &-scrollx-bar:hover{
+    background: rgba(0,0,0,0.35);
+    height: 100%;
+  }
+  &-slot-wrap{
+    float: left;
+    position: relative;
+  }
+  &-slot{
+    position: absolute;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    // content-visibility: auto;
+  }
+  &-col-resize-handler{
+    position: absolute;
+    cursor: col-resize;
+    background: var(--primary);
+  }
+  &-col-resize-line{
+    position: absolute;
+    height: 100%;
+    background: #ccc;
+    z-index: 9;
+    top: 0;
+    width: 1px;
+  }
+  &-tooltip {
+    &.popover{
+      pointer-events: initial;
+    }
+    z-index: 9999;
+    position: fixed;
+    color: #666;
+    pointer-events: none;
+    display: inline-block;
+    background: #ffffff;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 4px;
+    box-shadow: 0 3px 6px -4px #0000001f, 0 6px 16px #00000014, 0 9px 28px 8px #0000000d;
+  }
+  
+  &-tooltip-arrow,
+  &-tooltip-arrow::before {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: inherit;
+  }
+  
+  &-tooltip-arrow {
+    visibility: hidden;
+  }
+  
+  &-tooltip-arrow::before {
+    visibility: visible;
+    content: '';
+    transform: rotate(45deg);
+  }
+  
+  &-tooltip[data-popper-placement^='top'] > .kt-canvas-table-tooltip-arrow {
+    bottom: -4px;
+  }
+  
+  &-tooltip[data-popper-placement^='bottom'] > .kt-canvas-table-tooltip-arrow {
+    top: -4px;
+  }
+  
+  &-tooltip[data-popper-placement^='left'] > .kt-canvas-table-tooltip-arrow {
+    right: -4px;
+  }
+  
+  &-tooltip[data-popper-placement^='right'] > .kt-canvas-table-tooltip-arrow {
+    left: -4px;
+  }
+  &-select-row.el-radio,
+  &-select-row.el-checkbox{
+    display: block;
+    width: 100%;
+    padding: 5px 0px;
+  }
+  &-select-footer{
+    display: flex;
+    padding-top: 5px;
+    .el-button{
+      padding-top: 0; 
+      padding-bottom: 0; 
+      height: 28px;
+    }
+    .el-button--primary{
+      padding: 0 8px;
+    }
+  }
+  &-select-input{
+    position: absolute;
+    background: transparent;
+    border: none;
+    padding: 0 8px;
+    outline: none;
+    background: #fff;
+  }
+}

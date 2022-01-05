@@ -1,0 +1,23 @@
+{
+  "name": "kt-canvas-table",
+  "version": "1.0.3",
+  "description": "vue 组件 canvas-table 解决上万行数据渲染问题",
+  "main": "index.vue",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "vue",
+    "canvas",
+    "table"
+  ],
+  "peerDependencies": {
+    "element-ui": "^2.3.9",
+    "vue": "2.x"
+  },
+  "author": "gushichang",
+  "license": "ISC",
+  "devDependencies": {
+    "element-ui": "^2.3.9"
+  }
+}
