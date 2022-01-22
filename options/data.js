@@ -1,3 +1,4 @@
+const isPhone = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)
 export default function () {
   return {
     scrollX: 0,
@@ -19,7 +20,7 @@ export default function () {
       field: '',
       orderByMode: ''
     },
-    barWidth: 12,
+    barWidth: isPhone ? 8 : 12,
     slotList: [],
     isInitSlot: false,
     isInit: false,
@@ -36,6 +37,7 @@ export default function () {
       'mousemove': (...e) => this.$emit('mousemove', ...e),
       'query-click': (...e) => this.$emit('query-click', ...e),
       'mouseleave': (...e) => this.$emit('mouseleave', ...e),
-    }
+    },
+    isPhone
   }
 }

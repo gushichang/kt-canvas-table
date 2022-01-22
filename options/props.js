@@ -11,7 +11,7 @@ export default {
     type: Object,
     default: () => ({})
   },
-  columns: { // 列配置，见下方
+  columns: {
     type: Array,
     default: () => []
   },
@@ -34,11 +34,11 @@ export default {
   sort: { // 排序 支持 .sync
     type: Object,
     default: () => ({
-      field: '',  // 排序字段
-      orderByMode: '' // 排序方式： 1 - 倒序，0 - 正序
+      field: '',
+      orderByMode: ''
     })
   },
-  hideHeader: Boolean, // 隐藏表头
+  hideHeader: Boolean,
   rowHeight: {
     type: Number,
     default: 42
@@ -55,7 +55,7 @@ export default {
     default: () => []
   },
   summary: Object, // 汇总
-  highlightRow: Function, // (row, index) => String:color
+  highlightRow: Function,
   customStyle: { // 自定义样式
     type: Object,
     default: () => ({})
@@ -84,13 +84,16 @@ export default {
  * columns: [{
  *  key: String,
  *  type: String, // index, selection,
+ *  index: Function(index),
  *  fixed: String, // 'left' / 'right'
  *  width: Number,
  *  minWidth: Number,
  *  label: [String, Function],
  *  labelStyle: [Function, Object] // return Object,
- *  formatter: (row, col, index) => [], //  见下方Formatter 配置
+ *  formatter: (row, col, index) => [],
+ *  showOverflowTooltip: true,
  *  sortable: [Boolean, String],
+ *  sortOrders: [0, 1],
  *  cellStyle: [Function, Object],
  *  align: String, //
  *  labelAlign: String, //
@@ -98,9 +101,9 @@ export default {
  *  queryField: '', // 查询绑定的值
  *  queryComponent: '', // 查询过滤组件
  *  queryAttrs: {}, // 查询过滤组件需要传入的值
- *  summaryFormatter: [], //  见下方Formatter 配置
+ *  summaryFormatter: [],
  *  headerFormatter: [Array, Function],
- *  headerTools: [], //  见下方Formatter 配置
+ *  headerTools: [],
  *  summaryAlign: 'center',
     summarySpan: 3,
     colResize: true,
@@ -114,7 +117,7 @@ export default {
  * }]
  */
 
-/* let formatter = (row, col, index) [
+/* let formatter = [
   [
     {
       id: 'xxx', // 给事件做标识
@@ -145,17 +148,18 @@ export default {
           offsetY： 0, // 纵向偏移
         }
       },
-      tooltip: { //  气泡
+      tooltip: {
         content: '',
         placement: 'top',
+        style: {},
       },
+
       on: {
-        click: ({row, col, index, target}) => {},
+        click: (row, col, index) => {},
         dblclick: () => {},
-        'click.stop': () => {},
+        mouseenter: () => {},
+        mouseleave: () => {}
       }
     }
   ]
 ] */
-
-  

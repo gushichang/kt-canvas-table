@@ -6,6 +6,9 @@
     @click="onEvents"
     @contextmenu="onContextmenu"
     @dblclick="onEvents"
+    @touchstart="onTouchStart"
+    @touchmove="onTouchMove"
+    @touchend="onTouchEnd"
     ref="board">
     <slot/>
     <!-- 纵向滚动条 -->
@@ -66,6 +69,8 @@
           v-if="popoverInfo.component"
           :is="popoverInfo.component"
           @confirm="onPopoverConfirm"
+          :show="showPopover"
+          :field="popoverInfo.queryField"
           v-on="popoverInfo.events"
           v-bind="popoverInfo.attrs"></component>
       </keep-alive>
@@ -73,6 +78,7 @@
     <input
       :style="selectInputStyle"
       type="text"
+      @contextmenu.stop
       @blur="showSelectInput = false"
       v-show="showSelectInput"
       ref="selectInput"
@@ -126,6 +132,7 @@ export default {
       tooltipPlacement: '',
       getPopoverRect: () => {},
       popoverPlacement: '',
+      touchInfo: null
     }
   },
   computed: {
@@ -188,6 +195,47 @@ export default {
     }
   },
   methods: {
+    onTouchEnd() {
+      this.touchInfo = null
+    },
+    onTouchStart(e) {
+      this.touchInfo = {
+        x: e.touches[0].pageX,
+        y: e.touches[0].pageY,
+      }
+    },
+    onTouchMove(e) {
+      // console.log(e)
+      if (!this.touchInfo) return
+      const deltaX = (this.touchInfo.x - e.touches[0].pageX) * 1.5
+      const deltaY = (this.touchInfo.y - e.touches[0].pageY) * 1.5
+      this.touchInfo = {
+        x: e.touches[0].pageX,
+        y: e.touches[0].pageY,
+      }
+      // 判断是横向滚动还是纵向滚动
+      let isHScroll = Math.abs(deltaX) > Math.abs(deltaY)
+      if (isHScroll &&
+          ((deltaX > 0 && this.scrollX < this.maxScrollWidth) ||
+            (deltaX < 0 && this.scrollX > 0)
+          )
+        ) {
+        e.preventDefault()
+        let scrollX = this.scrollX + deltaX
+        scrollX = scrollX < 0 ? 0 : (scrollX > this.maxScrollWidth ? this.maxScrollWidth : scrollX)
+        this.$emit('scroll', { x: scrollX })
+      } else if (
+        !isHScroll &&
+        ((deltaY > 0 && this.scrollY < this.maxScrollHeight) ||
+          (deltaY < 0 && this.scrollY > 0)
+        )
+      ) {
+        e.preventDefault()
+        let scrollY = this.scrollY + deltaY
+        scrollY = scrollY < 0 ? 0 : (scrollY > this.maxScrollHeight ? this.maxScrollHeight : scrollY)
+        this.$emit('scroll', { y: scrollY })
+      }
+    },
     onMouseleave() {
       this.hideTooltip()
       this.mouseInfo = null
@@ -449,21 +497,26 @@ export default {
         return null
       }
     },
-    onMousemove(e) {
-      if (this.colIsDown) return
+    getMouseInfo(e) {
       const { left, top } = this.$refs.board.getBoundingClientRect()
       const x = e.clientX - left
       const y = e.clientY - top
       this.mouseInfo = {x, y}
+    },
+    onMousemove(e) {
+      if (this.colIsDown) return
+      this.getMouseInfo(e)
       this.currentCellInfo = this.getCellInfoByMouse()
       if (this.currentCellInfo) {
         this.$emit('mousemove', this.currentCellInfo, this.mouseInfo)
       }
-      this.showColResize(x)
+      this.showColResize(this.mouseInfo.x)
       this.setCursorAndTitle()
       this.setTooltip()
     },
     onEvents(e) {
+      this.getMouseInfo(e)
+      this.currentCellInfo = this.getCellInfoByMouse()
       if (this.currentCellInfo && !this.colIsDown) {
         const { box, target, col } = this.currentCellInfo
         if (target && target.on) {
@@ -627,8 +680,8 @@ export default {
             'right': '-end',
             'center': '',
             'left': '-start',
-          }[col.algin || 'left']
-          this.createTooltip(rect, (box === 'head' ? 'bottom' : 'top') + placementX, col.algin || 'left')
+          }[col.align || 'left']
+          this.createTooltip(rect, (box === 'head' ? 'bottom' : 'top') + placementX, col.align || 'left')
         } else {
           this.hideTooltip()
         }
@@ -636,12 +689,12 @@ export default {
         this.hideTooltip()
       }
     },
-    createTooltip(rect, placement, algin) {
+    createTooltip(rect, placement, align) {
       let offsetLeft = 0
       let offsetRight = 0
-      if (algin === 'left') {
+      if (align === 'left') {
         offsetRight = 50 - rect.width
-      } else if (algin === 'center') {
+      } else if (align === 'center') {
         offsetLeft = (rect.width - 50) / 2
         offsetRight = -offsetLeft
       } else {

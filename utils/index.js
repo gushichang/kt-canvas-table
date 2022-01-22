@@ -174,7 +174,7 @@ export const getNodesInfoByFormatter = (formatter, ctx, width, height, style, al
         itemHeight = maxFontSize * lineHeight + itemStyle.padding[0] + itemStyle.padding[2]
       }
       if (item.style && item.style.width) {
-        itemWidth = item.style.item.width
+        itemWidth = item.style.width
       } else {
         itemWidth = textOverflow(ctx, item.text, width, itemStyle.fontSize).tw +
                     itemStyle.padding[1] + itemStyle.padding[3] +

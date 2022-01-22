@@ -5,7 +5,7 @@
   class="kt-canvas-table-box">
   <div
     ref="table"
-    :class="{ 'kt-canvas-table_border': border }"
+    :class="{ 'kt-canvas-table_border': border, 'is-phone': isPhone }"
     class="kt-canvas-table">
     <canvas
       :style="{

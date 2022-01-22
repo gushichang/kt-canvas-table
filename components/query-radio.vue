@@ -24,12 +24,9 @@
 </template>
 
 <script>
-import ElRadioGroup from 'element-ui/packages/radio-group'
-import ElRadio from 'element-ui/packages/radio'
-import ElButton from 'element-ui/packages/button'
-import 'element-ui/lib/theme-chalk/radio-group.css'
-import 'element-ui/lib/theme-chalk/radio.css'
-import 'element-ui/lib/theme-chalk/button.css'
+import ElRadioGroup from '../el-components/checkbox-group'
+import ElRadio from '../el-components/radio'
+import ElButton from '../el-components/button'
 import { isNull } from '../utils'
 export default {
   components: { ElRadioGroup, ElRadio, ElButton },

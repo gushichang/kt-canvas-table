@@ -19,7 +19,7 @@ export default {
     if (col.labelStyle && col.labelStyle.background) {
       return col.labelStyle.background
     } else if (col.sortable && this.currentOrder.field === (col.sortable === true ? col.key : col.sortable)) {
-      return this.style.activeRowBackground
+      return this.style.activeColBackground
     } else {
       return null
     }
@@ -32,7 +32,7 @@ export default {
     if (cellStyle && cellStyle.background) {
       return cellStyle.background
     } else if (col.sortable && this.currentOrder.field === (col.sortable === true ? col.key : col.sortable)) {
-      return this.style.activeRowBackground
+      return this.style.activeColBackground
     }
   },
   // 获取每行的背景颜色
@@ -41,7 +41,7 @@ export default {
     if (highlightRow) {
       return highlightRow
     } else if (this.activeIndex === index) {
-      return this.style.activeColBackground
+      return this.style.activeRowBackground
     } else if (this.stripe && index % 2 !== 0) {
       return this.style.stripeRowBackground
     } else {
@@ -186,7 +186,7 @@ export default {
     while (index < endIndex) {
       const row = this.data[index]
       const _top = this.headerHeight + index * this.rowHeight - this.scrollY
-      this.drawBackground(this.fixedPlateInfo[fixed].x, _top,
+      this.drawBackground(this.fixedPlateInfo[fixed].x, _top - 0.5,
         this.fixedPlateInfo[fixed].width,
         this.rowHeight,
         this.getRowBackground(row, index)
@@ -204,7 +204,7 @@ export default {
           if (_left > this.wrapperWidth - this.fixedRightWidth) break
         }
         // 画背景边框
-        this.drawCellRect(_left, _top, {
+        this.drawCellRect(_left, _top - 1, {
           width: col.width,
           height: this.rowHeight,
           background: this.getBodyBackground(row, col, index)

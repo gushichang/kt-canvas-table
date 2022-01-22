@@ -12,7 +12,6 @@
     "table"
   ],
   "peerDependencies": {
-    "element-ui": "^2.3.9",
     "vue": "2.x"
   },
   "author": "gushichang",

@@ -4,7 +4,7 @@ export default {
   border: 'redraw',
   stripe: 'redraw',
   rowHeight: 'redraw',
-  customerStyle: {
+  customStyle: {
     deep: true,
     handler: 'redraw'
   },

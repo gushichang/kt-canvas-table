@@ -24,12 +24,9 @@
 </template>
 
 <script>
-import ElCheckboxGroup from 'element-ui/packages/checkbox-group'
-import ElCheckbox from 'element-ui/packages/checkbox'
-import ElButton from 'element-ui/packages/button'
-import 'element-ui/lib/theme-chalk/checkbox-group.css'
-import 'element-ui/lib/theme-chalk/checkbox.css'
-import 'element-ui/lib/theme-chalk/button.css'
+import ElCheckboxGroup from '../el-components/checkbox-group'
+import ElCheckbox from '../el-components/checkbox'
+import ElButton from '../el-components/button'
 import { isNull } from '../utils'
 export default {
   components: { ElCheckboxGroup, ElCheckbox, ElButton },

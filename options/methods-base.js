@@ -161,28 +161,22 @@ export default {
     this.ctx.scale(this.scaleRatio, this.scaleRatio)
   },
   // 获取单元格的宽度
-  getCellWidth(item) {
-    let total = 0
-    if (item.children && item.children.length) {
-      let t = 0
-      item.children.forEach(child => {
-        t += this.getCellWidth(child)
-      })
-      total += t
-    } else {
-      let w = this.widthConfig[item.key] || parseInt(item.width)
-      if (!w && item.minWidth) {
-        const diff = this.boxWidth - this.defaultWidthTotal
-        const minW = parseInt(item.minWidth)
-        if (diff > 0) {
-          w = minW + minW / this.minWidthTotal * diff
-        } else {
-          w = minW
-        }
+  getCellWidth(item, isEnd, contentWidth) {
+    let w = this.widthConfig[item.key] || parseInt(item.width)
+    if (!w && item.minWidth) {
+      const diff = this.boxWidth - this.defaultWidthTotal
+      const minW = parseInt(item.minWidth)
+      if (diff > 0) {
+        w = Math.round(minW + minW / this.minWidthTotal * diff)
+      } else {
+        w = minW
       }
-      total += w || 50
     }
-    return total
+    // 在自适应宽情况下，最后一列的宽为剩余宽度，解决 Math.round 的误差
+    if (isEnd && this.boxWidth - this.defaultWidthTotal > 0 && this.minWidthTotal > 0) {
+      w = this.boxWidth - contentWidth
+    }
+    return w || 50
   },
   /**
    * 获取根据 columns 计算出:
@@ -214,9 +208,10 @@ export default {
     }
     this.headerHeight = headerRowHeights.reduce((t, v) => t + v, 0)
 
-    let each = (data, level = 1, parent = null) => {
+    let each = (data, level = 1, parent = null, pisEnd = true) => {
       let _left = parent ? parent._left : 0
-      data.forEach(item => {
+      data.forEach((item, index) => {
+        let isEnd = pisEnd && index === data.length - 1
         let _top = 0
         for (let i = 0; i < level - 1; i++) {
           _top += headerRowHeights[i]
@@ -224,19 +219,20 @@ export default {
         const val = {
           ...item,
           fixed: parent ? parent.fixed : item.fixed,
-          width: this.getCellWidth(item),
           _left,
           _top,
         }
         if (item.children && item.children.length) {
           val._height = headerRowHeights[level - 1]
           val.children = []
-          each(item.children, level + 1, val)
+          each(item.children, level + 1, val, isEnd)
+          val.width = val.children.reduce((t, v) => t + v.width, 0)
         } else {
           val._height = this.headerHeight - _top
           if (val.type === 'selection') {
             this.fillSelectionFormatter(val)
           }
+          val.width = this.getCellWidth(item, isEnd, contentWidth)
           contentWidth += val.width
           if (val.fixed === 'left') fixedLeftWidth += val.width
           else if (val.fixed === 'right') fixedRightWidth += val.width
@@ -335,8 +331,8 @@ export default {
     this.draw(false)
   },
   pushSlot(val) {
-    const isParentCell = Boolean(val.children)
-    let i = { 'left': 0, 'right': 2 }[val.fixed] || 1
+    const isParentCell = val.children && val.children.length > 0
+    let i = { 'left': 0, 'center': 1, 'right': 2 }[val.fixed || 'center']
     if (val.headerCustomRender) {
       this.slotList[0].list[i].list.push(val)
     }

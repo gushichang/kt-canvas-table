@@ -176,4 +176,10 @@
     outline: none;
     background: #fff;
   }
+  &.is-phone{
+    .kt-canvas-table-scrolly-box,
+    .kt-canvas-table-scrollx-box{
+      pointer-events: none;
+    }
+  }
 }
